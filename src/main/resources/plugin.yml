@@ -1,0 +1,4 @@
+name: Rde
+version: '${project.version}'
+main: teamriverbubbles.rde.Rde
+api-version: 1.15
