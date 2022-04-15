@@ -86,7 +86,6 @@ public class Player implements Listener {
             }
         }
 
-
     }
 
     @EventHandler
