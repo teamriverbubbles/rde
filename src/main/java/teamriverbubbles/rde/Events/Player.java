@@ -16,8 +16,10 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import dev.dejvokep.boostedyaml.spigot.SpigotSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.potion.PotionEffectType;
 import teamriverbubbles.rde.Rde;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -43,12 +45,13 @@ public class Player implements Listener {
                     int randomNumber = random.nextInt(30);
                     YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
                     YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-                    int amplifier = (int) mainconfig.get("amplifier");
+
 
                     int remove = config.getInt(event.getEntity().getKiller().getUniqueId() + ".effect");
                     event.getEntity().getKiller().sendMessage(remove + "removed");
 
-                    int duration = plugin.getConfig().getInt("override-duration");
+                    int amplifier = (int) mainconfig.get("amplifier");
+                    int duration = plugin.getConfig().getInt("duration");
                     if(duration == 0) duration = Integer.MAX_VALUE;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         switch(remove) {
@@ -214,7 +217,7 @@ public class Player implements Listener {
             }
             int randomNumber = config.getInt(event.getPlayer().getUniqueId() + ".effect");
             //event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been given the effect of &b" + randomNumber));
-            int duration = plugin.getConfig().getInt("override-duration");
+            int duration = plugin.getConfig().getInt("duration");
             if(duration == 0) duration = Integer.MAX_VALUE;
             YamlDocument mainconfig = null;
             try {
@@ -260,6 +263,121 @@ public class Player implements Listener {
 
         }, 20L);
 
+    }
+
+    @EventHandler
+    public void PlayerItemConsumeEvent(PlayerItemConsumeEvent event) throws IOException {
+        if (event.getItem().getType() == Material.MILK_BUCKET) {
+            YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+            YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+            boolean milk = mainconfig.getBoolean("allow-effect-to-be-removed-by-milk-bucket");
+            if(!milk) {
+                int effect = config.getInt(event.getPlayer().getUniqueId() + ".effect");
+                int amplifier = (int) mainconfig.get("amplifier");
+                int duration = plugin.getConfig().getInt("duration");
+                if(duration == 0) duration = Integer.MAX_VALUE;
+                int finalDuration = duration;
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    switch (effect) {
+                        case 0:
+                            break;
+                        case 1:
+                            event.getPlayer().addPotionEffect(PotionEffectType.ABSORPTION.createEffect(finalDuration, amplifier));
+                            break;
+                        case 2:
+                            event.getPlayer().addPotionEffect(PotionEffectType.BAD_OMEN.createEffect(finalDuration, amplifier));
+                            break;
+                        case 3:
+                            event.getPlayer().addPotionEffect(PotionEffectType.BLINDNESS.createEffect(finalDuration, amplifier));
+                            break;
+                        case 4:
+                            event.getPlayer().addPotionEffect(PotionEffectType.CONFUSION.createEffect(finalDuration, amplifier));
+                            break;
+                        case 5:
+                            event.getPlayer().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(finalDuration, amplifier));
+                            break;
+                        case 6:
+                            event.getPlayer().addPotionEffect(PotionEffectType.DOLPHINS_GRACE.createEffect(finalDuration, amplifier));
+                            break;
+                        case 7:
+                            event.getPlayer().addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(finalDuration, amplifier));
+                            break;
+                        case 8:
+                            event.getPlayer().addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(finalDuration, amplifier));
+                            break;
+                        case 9:
+                            event.getPlayer().addPotionEffect(PotionEffectType.GLOWING.createEffect(finalDuration, amplifier));
+                            break;
+                        case 10:
+                            event.getPlayer().addPotionEffect(PotionEffectType.HARM.createEffect(finalDuration, amplifier));
+                            break;
+                        case 11:
+                            event.getPlayer().addPotionEffect(PotionEffectType.HEAL.createEffect(finalDuration, amplifier));
+                            break;
+                        case 12:
+                            event.getPlayer().addPotionEffect(PotionEffectType.HEALTH_BOOST.createEffect(finalDuration, amplifier));
+                            break;
+                        case 13:
+                            event.getPlayer().addPotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE.createEffect(finalDuration, amplifier));
+                            break;
+                        case 14:
+                            event.getPlayer().addPotionEffect(PotionEffectType.HUNGER.createEffect(finalDuration, amplifier));
+                            break;
+                        case 15:
+                            event.getPlayer().addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(finalDuration, amplifier));
+                            break;
+                        case 16:
+                            event.getPlayer().addPotionEffect(PotionEffectType.INVISIBILITY.createEffect(finalDuration, amplifier));
+                            break;
+                        case 17:
+                            event.getPlayer().addPotionEffect(PotionEffectType.JUMP.createEffect(finalDuration, amplifier));
+                            break;
+                        case 18:
+                            event.getPlayer().addPotionEffect(PotionEffectType.LEVITATION.createEffect(finalDuration, amplifier));
+                            break;
+                        case 19:
+                            event.getPlayer().addPotionEffect(PotionEffectType.LUCK.createEffect(finalDuration, amplifier));
+                            break;
+                        case 20:
+                            event.getPlayer().addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(finalDuration, amplifier));
+                            break;
+                        case 21:
+                            event.getPlayer().addPotionEffect(PotionEffectType.POISON.createEffect(finalDuration, amplifier));
+                            break;
+                        case 22:
+                            event.getPlayer().addPotionEffect(PotionEffectType.REGENERATION.createEffect(finalDuration, amplifier));
+                            break;
+                        case 23:
+                            event.getPlayer().addPotionEffect(PotionEffectType.SATURATION.createEffect(finalDuration, amplifier));
+                            break;
+                        case 24:
+                            event.getPlayer().addPotionEffect(PotionEffectType.SLOW.createEffect(finalDuration, amplifier));
+                            break;
+                        case 25:
+                            event.getPlayer().addPotionEffect(PotionEffectType.SLOW_DIGGING.createEffect(finalDuration, amplifier));
+                            break;
+                        case 26:
+                            event.getPlayer().addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(finalDuration, amplifier));
+                            break;
+                        case 27:
+                            event.getPlayer().addPotionEffect(PotionEffectType.SPEED.createEffect(finalDuration, amplifier));
+                            break;
+                        case 28:
+                            event.getPlayer().addPotionEffect(PotionEffectType.UNLUCK.createEffect(finalDuration, amplifier));
+                            break;
+                        case 29:
+                            event.getPlayer().addPotionEffect(PotionEffectType.WATER_BREATHING.createEffect(finalDuration, amplifier));
+                            break;
+                        case 30:
+                            event.getPlayer().addPotionEffect(PotionEffectType.WEAKNESS.createEffect(finalDuration, amplifier));
+                            break;
+                        case 31:
+                            event.getPlayer().addPotionEffect(PotionEffectType.WITHER.createEffect(finalDuration, amplifier));
+                            break;
+                    }
+                }, 20L);
+            }
+        }
     }
 
 }

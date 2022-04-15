@@ -1,2 +1,3 @@
 potion-amplifier: 0 # 0 = level 1, 1 = level 2, 2 = level 3 and so on
-#override-duration: 1
+duration: 0
+allow-effect-to-be-removed-by-milk-bucket: false
