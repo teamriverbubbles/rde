@@ -108,7 +108,7 @@ public class Player implements Listener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            int amplifier = (int) mainconfig.get("amplifier");
+            int amplifier = (int) mainconfig.getInt("amplifier");
 
             switch (randomNumber) {
                 case 1: event.getPlayer().addPotionEffect(PotionEffectType.ABSORPTION.createEffect(duration, amplifier)); break;
