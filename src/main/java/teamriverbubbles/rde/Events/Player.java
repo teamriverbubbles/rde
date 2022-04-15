@@ -43,11 +43,51 @@ public class Player implements Listener {
                 int duration = plugin.getConfig().getInt("override-duration");
                 if(duration == 0) duration = Integer.MAX_VALUE;
                 YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+                YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+                int amplifier = (int) mainconfig.get("amplifier");
+
+                int remove = config.getInt(event.getEntity().getKiller().getUniqueId() + ".effect");
+
+                    switch(remove) {
+                        case 0: break;
+                        case 1: event.getEntity().getKiller().removePotionEffect(PotionEffectType.ABSORPTION); break;
+                        case 2: event.getEntity().getKiller().removePotionEffect(PotionEffectType.BAD_OMEN); break;
+                        case 3: event.getEntity().getKiller().removePotionEffect(PotionEffectType.BLINDNESS); break;
+                        case 4: event.getEntity().getKiller().removePotionEffect(PotionEffectType.CONFUSION); break;
+                        case 5: event.getEntity().getKiller().removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE); break;
+                        case 6: event.getEntity().getKiller().removePotionEffect(PotionEffectType.DOLPHINS_GRACE); break;
+                        case 7: event.getEntity().getKiller().removePotionEffect(PotionEffectType.FAST_DIGGING); break;
+                        case 8: event.getEntity().getKiller().removePotionEffect(PotionEffectType.FIRE_RESISTANCE); break;
+                        case 9: event.getEntity().getKiller().removePotionEffect(PotionEffectType.GLOWING); break;
+                        case 10: event.getEntity().getKiller().removePotionEffect(PotionEffectType.HARM); break;
+                        case 11: event.getEntity().getKiller().removePotionEffect(PotionEffectType.HEAL); break;
+                        case 12: event.getEntity().getKiller().removePotionEffect(PotionEffectType.HEALTH_BOOST); break;
+                        case 13: event.getEntity().getKiller().removePotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE); break;
+                        case 14: event.getEntity().getKiller().removePotionEffect(PotionEffectType.HUNGER); break;
+                        case 15: event.getEntity().getKiller().removePotionEffect(PotionEffectType.INCREASE_DAMAGE); break;
+                        case 16: event.getEntity().getKiller().removePotionEffect(PotionEffectType.INVISIBILITY); break;
+                        case 17: event.getEntity().getKiller().removePotionEffect(PotionEffectType.JUMP); break;
+                        case 18: event.getEntity().getKiller().removePotionEffect(PotionEffectType.LEVITATION); break;
+                        case 19: event.getEntity().getKiller().removePotionEffect(PotionEffectType.LUCK); break;
+                        case 20: event.getEntity().getKiller().removePotionEffect(PotionEffectType.NIGHT_VISION); break;
+                        case 21: event.getEntity().getKiller().removePotionEffect(PotionEffectType.POISON); break;
+                        case 22: event.getEntity().getKiller().removePotionEffect(PotionEffectType.REGENERATION); break;
+                        case 23: event.getEntity().getKiller().removePotionEffect(PotionEffectType.SATURATION); break;
+                        case 24: event.getEntity().getKiller().removePotionEffect(PotionEffectType.SLOW); break;
+                        case 25: event.getEntity().getKiller().removePotionEffect(PotionEffectType.SLOW_DIGGING); break;
+                        case 26: event.getEntity().getKiller().removePotionEffect(PotionEffectType.SLOW_FALLING); break;
+                        case 27: event.getEntity().getKiller().removePotionEffect(PotionEffectType.SPEED); break;
+                        case 28: event.getEntity().getKiller().removePotionEffect(PotionEffectType.UNLUCK); break;
+                        case 29: event.getEntity().getKiller().removePotionEffect(PotionEffectType.WATER_BREATHING); break;
+                        case 30: event.getEntity().getKiller().removePotionEffect(PotionEffectType.WEAKNESS); break;
+                        case 31: event.getEntity().getKiller().removePotionEffect(PotionEffectType.WITHER); break;
+                    }
+
+
                 config.set(event.getEntity().getKiller().getUniqueId() + ".effect", randomNumber);
                 config.save();
 
-                YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-                int amplifier = (int) mainconfig.get("amplifier");
+
                 event.getEntity().getKiller().sendMessage("You killed " + event.getEntity().getName() + "! You got a random number: " + randomNumber);
                 switch(randomNumber) {
                     case 0: break;
