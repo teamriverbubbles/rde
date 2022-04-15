@@ -37,52 +37,55 @@ public class Player implements Listener {
 
     @EventHandler
     public void onPlayerKill(org.bukkit.event.entity.EntityDeathEvent event) throws IOException {
-        if (event.getEntity().getKiller() != null) {
-            int randomNumber = random.nextInt(30);
-            int duration = plugin.getConfig().getInt("override-duration");
-            if(duration == 0) duration = Integer.MAX_VALUE;
-            YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-            config.set(event.getEntity().getKiller().getUniqueId() + ".effect", randomNumber);
-            config.save();
+        if(event.getEntity().getKiller() instanceof org.bukkit.entity.Player) {
+            if (event.getEntity().getKiller() != null) {
+                int randomNumber = random.nextInt(30);
+                int duration = plugin.getConfig().getInt("override-duration");
+                if(duration == 0) duration = Integer.MAX_VALUE;
+                YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+                config.set(event.getEntity().getKiller().getUniqueId() + ".effect", randomNumber);
+                config.save();
 
-            YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-            int amplifier = (int) mainconfig.get("amplifier");
-            event.getEntity().getKiller().sendMessage("You killed " + event.getEntity().getName() + "! You got a random number: " + randomNumber);
-            switch(randomNumber) {
-                case 0: break;
-                case 1: event.getEntity().getKiller().addPotionEffect(PotionEffectType.ABSORPTION.createEffect(duration, amplifier)); break;
-                case 2: event.getEntity().getKiller().addPotionEffect(PotionEffectType.BAD_OMEN.createEffect(duration, amplifier)); break;
-                case 3: event.getEntity().getKiller().addPotionEffect(PotionEffectType.BLINDNESS.createEffect(duration, amplifier)); break;
-                case 4: event.getEntity().getKiller().addPotionEffect(PotionEffectType.CONFUSION.createEffect(duration, amplifier)); break;
-                case 5: event.getEntity().getKiller().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(duration, amplifier)); break;
-                case 6: event.getEntity().getKiller().addPotionEffect(PotionEffectType.DOLPHINS_GRACE.createEffect(duration, amplifier)); break;
-                case 7: event.getEntity().getKiller().addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(duration, amplifier)); break;
-                case 8: event.getEntity().getKiller().addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(duration, amplifier)); break;
-                case 9: event.getEntity().getKiller().addPotionEffect(PotionEffectType.GLOWING.createEffect(duration, amplifier)); break;
-                case 10: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HARM.createEffect(duration, amplifier)); break;
-                case 11: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HEAL.createEffect(duration, amplifier)); break;
-                case 12: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HEALTH_BOOST.createEffect(duration, amplifier)); break;
-                case 13: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE.createEffect(duration, amplifier)); break;
-                case 14: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HUNGER.createEffect(duration, amplifier)); break;
-                case 15: event.getEntity().getKiller().addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(duration, amplifier)); break;
-                case 16: event.getEntity().getKiller().addPotionEffect(PotionEffectType.INVISIBILITY.createEffect(duration, amplifier)); break;
-                case 17: event.getEntity().getKiller().addPotionEffect(PotionEffectType.JUMP.createEffect(duration, amplifier)); break;
-                case 18: event.getEntity().getKiller().addPotionEffect(PotionEffectType.LEVITATION.createEffect(duration, amplifier)); break;
-                case 19: event.getEntity().getKiller().addPotionEffect(PotionEffectType.LUCK.createEffect(duration, amplifier)); break;
-                case 20: event.getEntity().getKiller().addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(duration, amplifier)); break;
-                case 21: event.getEntity().getKiller().addPotionEffect(PotionEffectType.POISON.createEffect(duration, amplifier)); break;
-                case 22: event.getEntity().getKiller().addPotionEffect(PotionEffectType.REGENERATION.createEffect(duration, amplifier)); break;
-                case 23: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SATURATION.createEffect(duration, amplifier)); break;
-                case 24: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SLOW.createEffect(duration, amplifier)); break;
-                case 25: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SLOW_DIGGING.createEffect(duration, amplifier)); break;
-                case 26: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(duration, amplifier)); break;
-                case 27: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SPEED.createEffect(duration, amplifier)); break;
-                case 28: event.getEntity().getKiller().addPotionEffect(PotionEffectType.UNLUCK.createEffect(duration, amplifier)); break;
-                case 29: event.getEntity().getKiller().addPotionEffect(PotionEffectType.WATER_BREATHING.createEffect(duration, amplifier)); break;
-                case 30: event.getEntity().getKiller().addPotionEffect(PotionEffectType.WEAKNESS.createEffect(duration, amplifier)); break;
-                case 31: event.getEntity().getKiller().addPotionEffect(PotionEffectType.WITHER.createEffect(duration, amplifier)); break;
+                YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+                int amplifier = (int) mainconfig.get("amplifier");
+                event.getEntity().getKiller().sendMessage("You killed " + event.getEntity().getName() + "! You got a random number: " + randomNumber);
+                switch(randomNumber) {
+                    case 0: break;
+                    case 1: event.getEntity().getKiller().addPotionEffect(PotionEffectType.ABSORPTION.createEffect(duration, amplifier)); break;
+                    case 2: event.getEntity().getKiller().addPotionEffect(PotionEffectType.BAD_OMEN.createEffect(duration, amplifier)); break;
+                    case 3: event.getEntity().getKiller().addPotionEffect(PotionEffectType.BLINDNESS.createEffect(duration, amplifier)); break;
+                    case 4: event.getEntity().getKiller().addPotionEffect(PotionEffectType.CONFUSION.createEffect(duration, amplifier)); break;
+                    case 5: event.getEntity().getKiller().addPotionEffect(PotionEffectType.DAMAGE_RESISTANCE.createEffect(duration, amplifier)); break;
+                    case 6: event.getEntity().getKiller().addPotionEffect(PotionEffectType.DOLPHINS_GRACE.createEffect(duration, amplifier)); break;
+                    case 7: event.getEntity().getKiller().addPotionEffect(PotionEffectType.FAST_DIGGING.createEffect(duration, amplifier)); break;
+                    case 8: event.getEntity().getKiller().addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(duration, amplifier)); break;
+                    case 9: event.getEntity().getKiller().addPotionEffect(PotionEffectType.GLOWING.createEffect(duration, amplifier)); break;
+                    case 10: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HARM.createEffect(duration, amplifier)); break;
+                    case 11: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HEAL.createEffect(duration, amplifier)); break;
+                    case 12: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HEALTH_BOOST.createEffect(duration, amplifier)); break;
+                    case 13: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE.createEffect(duration, amplifier)); break;
+                    case 14: event.getEntity().getKiller().addPotionEffect(PotionEffectType.HUNGER.createEffect(duration, amplifier)); break;
+                    case 15: event.getEntity().getKiller().addPotionEffect(PotionEffectType.INCREASE_DAMAGE.createEffect(duration, amplifier)); break;
+                    case 16: event.getEntity().getKiller().addPotionEffect(PotionEffectType.INVISIBILITY.createEffect(duration, amplifier)); break;
+                    case 17: event.getEntity().getKiller().addPotionEffect(PotionEffectType.JUMP.createEffect(duration, amplifier)); break;
+                    case 18: event.getEntity().getKiller().addPotionEffect(PotionEffectType.LEVITATION.createEffect(duration, amplifier)); break;
+                    case 19: event.getEntity().getKiller().addPotionEffect(PotionEffectType.LUCK.createEffect(duration, amplifier)); break;
+                    case 20: event.getEntity().getKiller().addPotionEffect(PotionEffectType.NIGHT_VISION.createEffect(duration, amplifier)); break;
+                    case 21: event.getEntity().getKiller().addPotionEffect(PotionEffectType.POISON.createEffect(duration, amplifier)); break;
+                    case 22: event.getEntity().getKiller().addPotionEffect(PotionEffectType.REGENERATION.createEffect(duration, amplifier)); break;
+                    case 23: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SATURATION.createEffect(duration, amplifier)); break;
+                    case 24: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SLOW.createEffect(duration, amplifier)); break;
+                    case 25: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SLOW_DIGGING.createEffect(duration, amplifier)); break;
+                    case 26: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SLOW_FALLING.createEffect(duration, amplifier)); break;
+                    case 27: event.getEntity().getKiller().addPotionEffect(PotionEffectType.SPEED.createEffect(duration, amplifier)); break;
+                    case 28: event.getEntity().getKiller().addPotionEffect(PotionEffectType.UNLUCK.createEffect(duration, amplifier)); break;
+                    case 29: event.getEntity().getKiller().addPotionEffect(PotionEffectType.WATER_BREATHING.createEffect(duration, amplifier)); break;
+                    case 30: event.getEntity().getKiller().addPotionEffect(PotionEffectType.WEAKNESS.createEffect(duration, amplifier)); break;
+                    case 31: event.getEntity().getKiller().addPotionEffect(PotionEffectType.WITHER.createEffect(duration, amplifier)); break;
+                }
             }
         }
+
 
     }
 
