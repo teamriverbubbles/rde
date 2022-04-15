@@ -37,7 +37,7 @@ public class Player implements Listener {
 
     @EventHandler
     public void onPlayerKill(org.bukkit.event.entity.EntityDeathEvent event) throws IOException {
-        if(event.getEntity().getKiller() instanceof org.bukkit.entity.Player) {
+        if(event.getEntity().getKiller().getType() == org.bukkit.entity.EntityType.PLAYER) {
             if (event.getEntity().getKiller() != null) {
                 int randomNumber = random.nextInt(30);
                 int duration = plugin.getConfig().getInt("override-duration");
@@ -99,7 +99,7 @@ public class Player implements Listener {
                 e.printStackTrace();
             }
             int randomNumber = config.getInt(event.getPlayer().getUniqueId() + ".effect");
-            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been given the effect of &b" + randomNumber));
+            //event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been given the effect of &b" + randomNumber));
             int duration = plugin.getConfig().getInt("override-duration");
             if(duration == 0) duration = Integer.MAX_VALUE;
             YamlDocument mainconfig = null;
