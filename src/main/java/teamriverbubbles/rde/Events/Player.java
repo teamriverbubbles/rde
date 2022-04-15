@@ -37,8 +37,8 @@ public class Player implements Listener {
 
     @EventHandler
     public void onPlayerKill(org.bukkit.event.entity.EntityDeathEvent event) throws IOException {
-        if(event.getEntity().getKiller().getType() == org.bukkit.entity.EntityType.PLAYER) {
             if (event.getEntity().getKiller() != null) {
+                if(event.getEntity().getKiller().getType() == org.bukkit.entity.EntityType.PLAYER) {
                 int randomNumber = random.nextInt(30);
                 int duration = plugin.getConfig().getInt("override-duration");
                 if(duration == 0) duration = Integer.MAX_VALUE;
