@@ -1,5 +1,6 @@
 package teamriverbubbles.rde;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,12 +14,19 @@ import java.io.IOException;
 
 public final class Rde extends JavaPlugin implements Listener {
 
+    private Player player;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
-        getServer().getPluginManager().registerEvents(new Player(this), this);
+        try {
+            getServer().getPluginManager().registerEvents(new Player(this), this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.saveDefaultConfig();
-        createCustomConfig();
+
+        Metrics metrics = new Metrics(this, 14945);
 
     }
 
@@ -26,27 +34,5 @@ public final class Rde extends JavaPlugin implements Listener {
     public void onDisable() {
         // Plugin shutdown logic
         HandlerList.unregisterAll();
-    }
-
-    private File customConfigFile;
-    private FileConfiguration customConfig;
-
-    public FileConfiguration getCustomConfig() {
-        return this.customConfig;
-    }
-
-    private void createCustomConfig() {
-        customConfigFile = new File(getDataFolder(), "playerdata.yml");
-        if (!customConfigFile.exists()) {
-            customConfigFile.getParentFile().mkdirs();
-            saveResource("playerdata.yml", false);
-        }
-
-        customConfig = new YamlConfiguration();
-        try {
-            customConfig.load(customConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
     }
 }

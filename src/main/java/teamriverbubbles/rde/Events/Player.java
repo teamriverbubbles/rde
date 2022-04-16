@@ -15,7 +15,6 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import dev.dejvokep.boostedyaml.spigot.SpigotSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,9 +31,18 @@ public class Player implements Listener {
 
     Random random = new Random();
     Rde plugin;
+    YamlDocument config;
+    YamlDocument mainconfig;
+    int amplifier;
+    int duration;
 
-    public Player(Rde plugin) {
+    public Player(Rde plugin) throws IOException {
         this.plugin = plugin;
+        this.config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+        this.mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
+        this.amplifier = (int) mainconfig.get("amplifier");
+        this.duration = (int) mainconfig.get("duration");
+        if(duration == 0) duration = Integer.MAX_VALUE;
     }
 
     @EventHandler
@@ -43,16 +51,10 @@ public class Player implements Listener {
             if(event.getEntity().getKiller().getType() == org.bukkit.entity.EntityType.PLAYER) {
                 if(event.getEntity().getType() == org.bukkit.entity.EntityType.PLAYER) {
                     int randomNumber = random.nextInt(30);
-                    YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-                    YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-
 
                     int remove = config.getInt(event.getEntity().getKiller().getUniqueId() + ".effect");
                     event.getEntity().getKiller().sendMessage(remove + "removed");
 
-                    int amplifier = (int) mainconfig.get("amplifier");
-                    int duration = plugin.getConfig().getInt("duration");
-                    if(duration == 0) duration = Integer.MAX_VALUE;
                     Bukkit.getScheduler().runTaskLater(plugin, () -> {
                         switch(remove) {
                             case 0: break;
@@ -206,26 +208,13 @@ public class Player implements Listener {
     }
 
     @EventHandler
-    public void PlayerRespawnEvent(PlayerRespawnEvent event) throws IOException {
+    public void PlayerRespawnEvent(PlayerRespawnEvent event) {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            //int randomNumber = plugin.getCustomConfig().getInt(event.getPlayer().getUniqueId() + ".effect");
-            YamlDocument config = null;
-            try {
-                config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             int randomNumber = config.getInt(event.getPlayer().getUniqueId() + ".effect");
             //event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have been given the effect of &b" + randomNumber));
             int duration = plugin.getConfig().getInt("duration");
             if(duration == 0) duration = Integer.MAX_VALUE;
-            YamlDocument mainconfig = null;
-            try {
-                mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            int amplifier = (int) mainconfig.getInt("amplifier");
+            int amplifier = mainconfig.getInt("amplifier");
 
             switch (randomNumber) {
                 case 1: event.getPlayer().addPotionEffect(PotionEffectType.ABSORPTION.createEffect(duration, amplifier)); break;
@@ -266,16 +255,11 @@ public class Player implements Listener {
     }
 
     @EventHandler
-    public void PlayerItemConsumeEvent(PlayerItemConsumeEvent event) throws IOException {
+    public void PlayerItemConsumeEvent(PlayerItemConsumeEvent event) {
         if (event.getItem().getType() == Material.MILK_BUCKET) {
-            YamlDocument config = YamlDocument.create(new File(plugin.getDataFolder(), "playerdata.yml"), plugin.getResource("playerdata.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
-            YamlDocument mainconfig = YamlDocument.create(new File(plugin.getDataFolder(), "config.yml"), plugin.getResource("config.yml"), GeneralSettings.builder().setSerializer(SpigotSerializer.getInstance()).build(), LoaderSettings.DEFAULT, DumperSettings.DEFAULT, UpdaterSettings.DEFAULT);
             boolean milk = mainconfig.getBoolean("allow-effect-to-be-removed-by-milk-bucket");
             if(!milk) {
                 int effect = config.getInt(event.getPlayer().getUniqueId() + ".effect");
-                int amplifier = (int) mainconfig.get("amplifier");
-                int duration = plugin.getConfig().getInt("duration");
-                if(duration == 0) duration = Integer.MAX_VALUE;
                 int finalDuration = duration;
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     switch (effect) {
